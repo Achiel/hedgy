@@ -9,3 +9,6 @@ handlers:
     
 - url: /ladbrokes
   script: ladbrokes.py
+  
+- url: /match
+  script: match.py

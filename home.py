@@ -18,12 +18,18 @@
 
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
+from models import Matchup
 
 class MainHandler(webapp.RequestHandler):
 
 	def get(self):
-		self.response.out.write('helleu')
-		
+		self.response.out.write('<h1>matches:</h1>')
+		writer = self.response.out
+		matches = Matchup.all()
+		for m in matches:
+			match_name = "%s vs %s" % (m.team_a_name, m.team_b_name)
+			link = "<a href='/match?team_a=%s&team_b=%s'>%s</a><br/>" % (m.team_a_name, m.team_b_name, match_name)
+			writer.write(link)
 def main():
 	application = webapp.WSGIApplication([('/', MainHandler)], debug=True)
 	util.run_wsgi_app(application)
