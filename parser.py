@@ -1,6 +1,6 @@
 #!/opt/local/bin/python2.5
 from BeautifulSoup import BeautifulSoup
-from models import Bet
+from models import Bet, Matchup
 import urllib2
 import re
 
@@ -31,17 +31,26 @@ def parse_row(a, row, url):
 	team_b_odds = calc_odds(row.find('td', {'class' : 'odds noBorder '}).a.string.strip())
 	draw_odds = calc_odds(row.find('td', {'class' : 'odds noBorder'}).a.string.strip())
 	
-	bet = Bet(team_a_name = team_a, team_b_name = team_b, 
-		team_a_odds = team_a_odds, team_b_odds = team_b_odds, draw_odds = draw_odds,
-		source = url, date_match = match_date
+	matchup = Matchup.all().filter('team_a_name = ', team_a).filter('team_b_name', team_b)
+	result = matchup.fetch(1);
+	if len(result) == 0:
+		matchup = Matchup(team_a_name = team_a, team_b_name = team_b, 
+			source = url, date_match = match_date
+			)
+		matchup.put()
+	else:
+		matchup = result[0]
+	bet = Bet(team_a_odds = team_a_odds, team_b_odds = team_b_odds, 
+			draw_odds = draw_odds,
+			match = matchup
 		)
 	bet.put()
 	
 	
 def parse_ladbrokes(url, out):
-	result = urllib2.urlopen(url)
-	doc = result.read()
-	# doc = open("ladbrokes.txt")
+	# result = urllib2.urlopen(url)
+	# doc = result.read()
+	doc = open("ladbrokes.txt")
 	soup = BeautifulSoup(''.join(doc))
 	mytable = soup('table')[0]
 	

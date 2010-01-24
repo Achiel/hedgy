@@ -34,7 +34,7 @@ class MainHandler(webapp.RequestHandler):
 
 
 def main():
-	application = webapp.WSGIApplication([('/', MainHandler)], debug=True)
+	application = webapp.WSGIApplication([('/ladbrokes', MainHandler)], debug=True)
 	util.run_wsgi_app(application)
 
 

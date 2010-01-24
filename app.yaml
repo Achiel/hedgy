@@ -5,6 +5,7 @@ api_version: 1
 
 handlers:
 - url: /
-    script: home.py
+  script: home.py
+    
 - url: /ladbrokes
-    script: ladbrokes.py
+  script: ladbrokes.py
