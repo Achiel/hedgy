@@ -51,6 +51,7 @@ class MainHandler(webapp.RequestHandler):
 			w.write("<td>%s</td>" % b.team_b_odds)
 			w.write("<td>%s</td>" % b.date_recorded)
 			w.write("</tr>")
+		w.write("</table>")
 		w.write('found %s bets' % len(bets))
 		
 def main():
