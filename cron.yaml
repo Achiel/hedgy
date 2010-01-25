@@ -1,0 +1,4 @@
+cron:
+- description: scraper
+  url: /ladbrokes
+  schedule: every 45 minutes

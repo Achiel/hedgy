@@ -1,6 +1,6 @@
 #!/opt/local/bin/python2.5
 from BeautifulSoup import BeautifulSoup
-from models import Bet, Matchup
+from models import Bet, Matchup, Unparsable
 import urllib2
 import re
 
@@ -46,22 +46,28 @@ def parse_row(a, row, url):
 		)
 	bet.put()
 	
-	
-def parse_ladbrokes(url, out):
-	# result = urllib2.urlopen(url)
-	# doc = result.read()
-	doc = open("ladbrokes.txt")
-	soup = BeautifulSoup(''.join(doc))
-	mytable = soup('table')[0]
-	
+def parse_table(table, url):
 	count = 0
-
-	for row in mytable.findAll('tr'):
+	for row in table.findAll('tr'):
 		for a in row.findAll('a', {'class': 'eventLink'})[:1]:
 			try:
 				parse_row(a, row, url)
 				count += 1
 			except:
-				print "unable to parse %s" % row
+				u = Unparsable(message="unable to parse %s" % row, source=url)
+				u.put()
+				# print "unable to parse %s" % row
+	return count
+	
+def parse(url, out):
+	result = urllib2.urlopen(url)
+	doc = result.read()
+	# doc = open("ladbrokesallcups.txt")
+	soup = BeautifulSoup(''.join(doc))
+	
+	count = 0
+	for table in soup('table'):
+		count += parse_table(table, url)
+	
 	result.close()
 	return count

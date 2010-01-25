@@ -14,3 +14,8 @@ class Bet(db.Model):
 	draw_odds = db.FloatProperty(required=False)
 	date_recorded = db.DateTimeProperty(required=True, auto_now=True)
 	current_score = db.StringProperty(required=False)
+
+class Unparsable(db.Model):
+	message = db.TextProperty(required=True)
+	source = db.LinkProperty(required=False)
+	date_recorded = db.DateTimeProperty(required=True, auto_now=True)
