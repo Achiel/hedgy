@@ -28,7 +28,7 @@ class MainHandler(webapp.RequestHandler):
 		matches = Matchup.all()
 		for m in matches:
 			match_name = "%s vs %s" % (m.team_a_name, m.team_b_name)
-			link = "<a href='/match?team_a=%s&team_b=%s'>%s</a><br/>" % (m.team_a_name, m.team_b_name, match_name)
+			link = "<a href='/match?team_a=%s&team_b=%s'>%s</a> at %s <br/>" % (m.team_a_name, m.team_b_name, match_name, date_match)
 			writer.write(link)
 def main():
 	application = webapp.WSGIApplication([('/', MainHandler)], debug=True)
