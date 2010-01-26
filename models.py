@@ -6,6 +6,7 @@ class Matchup(db.Model):
 	team_b_name = db.StringProperty(required=True)
 	source = db.LinkProperty(required=True)
 	date_match = db.StringProperty(required=False)
+	date_match_formatted = db.DateTimeProperty(required=False)
 	
 class Bet(db.Model):
 	match = db.ReferenceProperty(Matchup)

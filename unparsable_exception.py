@@ -1,0 +1,2 @@
+class UnparsableException(Exception):
+	pass

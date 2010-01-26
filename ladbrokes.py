@@ -29,7 +29,7 @@ class MainHandler(webapp.RequestHandler):
 		url = "http://sports.ladbrokes.com/en-gb/Navigation?dispSortId=1&context=bycountryandleague&byocList=s1811|s548|s2522|s295|s150|s84|s93|s816|s85|s99|s100|s131|s1705|s1614|s1616|s76|s79|s127|s109|s1559|s1945|s106|s117|s115|s95|s128"
 		try:
 			count = parse(url, self.response.out)
-			self.response.out.write('Finished importing %s records from %s ' % (count, url))
+			self.response.out.write("Finished importing %s records from <a href='%s'>%s</a> " % (count, url, url))
 		except urllib2.URLError, e:
 			self.response.out.write(e)
 

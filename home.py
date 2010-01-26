@@ -19,16 +19,26 @@
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
 from models import Matchup
+from datetime import datetime, timedelta
 
 class MainHandler(webapp.RequestHandler):
 
 	def get(self):
 		self.response.out.write('<h1>matches:</h1>')
 		writer = self.response.out
-		matches = Matchup.all()
+		matches = Matchup.all().order("date_match_formatted")
+
+		span = self.request.get('till')
+		if not span == "all":
+			matches.filter("date_match_formatted > ", datetime.now())
+
+		if not span == "":
+			span = int(span)
+			matches.filter("date_match_formatted < ", datetime.now() + timedelta(hours=span))
+			
 		for m in matches:
 			match_name = "%s vs %s" % (m.team_a_name, m.team_b_name)
-			link = "<a href='/match?team_a=%s&team_b=%s'>%s</a> at %s <br/>" % (m.team_a_name, m.team_b_name, match_name, date_match)
+			link = "<a href='/match?team_a=%s&team_b=%s'>%s</a> at %s <br/>" % (m.team_a_name, m.team_b_name, match_name, m.date_match_formatted)
 			writer.write(link)
 def main():
 	application = webapp.WSGIApplication([('/', MainHandler)], debug=True)
