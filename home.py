@@ -20,6 +20,7 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
 from models import Matchup
 from datetime import datetime, timedelta
+from models import Bet
 
 class MainHandler(webapp.RequestHandler):
 
@@ -43,8 +44,36 @@ class MainHandler(webapp.RequestHandler):
 			
 		for m in matches:
 			match_name = "%s vs %s" % (m.team_a_name, m.team_b_name)
-			link = "<a href='/match?team_a=%s&team_b=%s'>%s</a> at %s <br/>" % (m.team_a_name, m.team_b_name, match_name, m.date_match_formatted)
+			if  self.match_hot(m, w):
+				style = "color: red"
+			else:
+				style = ""
+			link = "<a style='%s' href='/match?team_a=%s&team_b=%s'>%s</a> at %s <br/>" % (style, m.team_a_name, m.team_b_name, match_name, m.date_match_formatted)
 			w.write(link)
+#			if self.match_hot(m, w) == True:
+#				w.write("woot")
+
+	def match_hot(self, m, w):
+		
+		bets = Bet.all().filter("match = ", m)
+		odds_a = None
+		odds_b = None
+		odds_draw = None
+		fluctuation = False
+		for b in bets:
+			if odds_a == None:
+				odds_a = b.team_a_odds
+				odds_b = b.team_b_odds
+				odds_draw = b.draw_odds
+			
+			if not odds_a == b.team_a_odds:
+				fluctuation = True
+			if not odds_b == b.team_b_odds:
+				fluctuation = True
+			if not odds_draw == b.draw_odds:
+				fluctuation = True
+		return fluctuation
+
 def main():
 	application = webapp.WSGIApplication([('/', MainHandler)], debug=True)
 	util.run_wsgi_app(application)
