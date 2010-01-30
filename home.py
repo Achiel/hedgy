@@ -31,7 +31,7 @@ class MainHandler(webapp.RequestHandler):
 			fluctuations = self.calc_fluctuation(m)
 			if fluctuations == 2:
 				style = "color: orange"
-			elif fluctuations == 3:
+			elif fluctuations > 2:
 				style = "color: red"
 			else:
 				style = ""
