@@ -33,6 +33,7 @@ class LadbrokesParser(Parser):
 	def parse_row(self, a, row):
 		safea = a.string.encode('ascii', 'replace')
 		score = re.search("[0-9]\-[0-9]", safea)
+		source = a['href']
 		if score is not None:
 			current_score = score.group()
 			teams = safea.partition(' %s ' % current_score)
@@ -71,7 +72,7 @@ class LadbrokesParser(Parser):
 
 		if len(result) == 0:
 			matchup = Matchup(team_a_name = team_a, team_b_name = team_b, 
-				source = self.url, date_match = match_date, date_match_formatted = date_match_formatted
+				source = source, date_match = match_date, date_match_formatted = date_match_formatted
 				)
 			matchup.put()
 		else:

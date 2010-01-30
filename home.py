@@ -20,7 +20,7 @@ class MainHandler(webapp.RequestHandler):
 
 		span = self.request.get('till')
 		if not span == "all":
-			matches.filter("date_match_formatted > ", datetime.now())
+			matches.filter("date_match_formatted > ", datetime.now() - timedelta(hours=2))
 
 		if not span == "" and not span == "all":
 			span = int(span)
@@ -28,32 +28,29 @@ class MainHandler(webapp.RequestHandler):
 			
 		for m in matches:
 			match_name = "%s vs %s" % (m.team_a_name, m.team_b_name)
-			if  self.match_hot(m, w):
+			fluctuations = self.calc_fluctuation(m)
+			if fluctuations == 2:
+				style = "color: orange"
+			elif fluctuations == 3:
 				style = "color: red"
 			else:
 				style = ""
-			link = "<a style='%s' href='/match?team_a=%s&team_b=%s'>%s</a> at %s <br/>" % (style, m.team_a_name, m.team_b_name, match_name, m.date_match_formatted)
+			link = "<a style='%s' href='/match?team_a=%s&team_b=%s'>%s</a> at %s" % (style, m.team_a_name, m.team_b_name, match_name, m.date_match_formatted)
 			w.write(link)
-
-	def match_hot(self, m, w):
-		
-		bets = Bet.all().filter("match = ", m)
-		odds_a = None
-		odds_b = None
-		odds_draw = None
-		for b in bets:
-			if odds_a == None:
-				odds_a = b.team_a_odds
-				odds_b = b.team_b_odds
-				odds_draw = b.draw_odds
+			two_hours = timedelta(hours=2)
+			diff = datetime.now() - m.date_match_formatted
+			if diff < two_hours and diff > timedelta():
+				w.write(" <a style='color: red' href='%s'>live</a>" % m.source)
+			w.write("<br/>")
 			
-			if not odds_a == b.team_a_odds:
-				return True
-			if not odds_b == b.team_b_odds:
-				return True
-			if not odds_draw == b.draw_odds:
-				return True
-		return False
+
+	def calc_fluctuation(self, m):
+		bets = Bet.all().filter("match = ", m)
+		s = set()
+		
+		map(s.add, [(b.team_a_odds, b.team_b_odds, b.draw_odds) for b in bets])
+		return len(s)
+
 
 def main():
 	application = webapp.WSGIApplication([('/', MainHandler)], debug=True)
