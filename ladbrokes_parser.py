@@ -30,14 +30,7 @@ class LadbrokesParser(Parser):
 		result.close()
 		return count
 	
-	def parse_date(self, date_split):
-		year = int(date_split[2])
-		month = months[date_split[1]]
-		day = int(date_split[0])
-		hour = int(date_split[4].split(":")[0])
-		minute = int(date_split[4].split(":")[1])
-	
-		return datetime(year, month, day, hour, minute)
+
 
 	def parse_row(self, a, row):
 		safea = a.string.encode('ascii', 'replace')
@@ -76,7 +69,7 @@ class LadbrokesParser(Parser):
 		matchup = Matchup.all().filter('team_a_name = ', team_a).filter('team_b_name', team_b)
 		result = matchup.fetch(1);
 
-		date_match_formatted = self.parse_date(match_date.split())
+		date_match_formatted = parse_date(match_date.split())
 
 		if len(result) == 0:
 			matchup = Matchup(team_a_name = team_a, team_b_name = team_b, 
@@ -106,3 +99,12 @@ class LadbrokesParser(Parser):
 					u = Unparsable(message="unable to parse %s" % message, source=self.url)
 					u.put()
 		return count
+
+def parse_date(date_split):
+	year = int(date_split[2])
+	month = months[date_split[1]]
+	day = int(date_split[0])
+	hour = int(date_split[4].split(":")[0])
+	minute = int(date_split[4].split(":")[1])
+
+	return datetime(year, month, day, hour, minute)
