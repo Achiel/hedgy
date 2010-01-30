@@ -1,5 +1,5 @@
 application: hedgyhedgy
-version: 2
+version: 2.5
 runtime: python
 api_version: 1
 
@@ -12,3 +12,6 @@ handlers:
   
 - url: /match
   script: match.py
+  
+- url: /convert
+  script: convert_legacy.py

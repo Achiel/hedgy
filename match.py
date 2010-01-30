@@ -40,7 +40,7 @@ class MainHandler(webapp.RequestHandler):
 		
 		match = matches[0]
 		w.write("<h1>%s vs %s</h1>" % (match.team_a_name, match.team_b_name))
-		w.write("<div>Match date: %s </div>" % match.date_match)
+		w.write("<div>Match date: %s </div>" % match.date_match_formatted)
 		bets = Bet.all().filter('match = ', match).fetch(1000)
 		w.write("<table>")
 		w.write("<tr><td>%s</td><td>Draw</td><td>%s</td><td>Recorded on</td><td>Current score</td></tr>" % (match.team_a_name, match.team_b_name))
