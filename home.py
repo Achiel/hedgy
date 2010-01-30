@@ -41,7 +41,6 @@ class MainHandler(webapp.RequestHandler):
 		odds_a = None
 		odds_b = None
 		odds_draw = None
-		fluctuation = False
 		for b in bets:
 			if odds_a == None:
 				odds_a = b.team_a_odds
@@ -49,12 +48,12 @@ class MainHandler(webapp.RequestHandler):
 				odds_draw = b.draw_odds
 			
 			if not odds_a == b.team_a_odds:
-				fluctuation = True
+				return True
 			if not odds_b == b.team_b_odds:
-				fluctuation = True
+				return True
 			if not odds_draw == b.draw_odds:
-				fluctuation = True
-		return fluctuation
+				return True
+		return False
 
 def main():
 	application = webapp.WSGIApplication([('/', MainHandler)], debug=True)
