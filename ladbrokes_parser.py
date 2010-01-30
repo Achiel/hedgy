@@ -29,8 +29,6 @@ class LadbrokesParser(Parser):
 	
 		result.close()
 		return count
-	
-
 
 	def parse_row(self, a, row):
 		safea = a.string.encode('ascii', 'replace')
