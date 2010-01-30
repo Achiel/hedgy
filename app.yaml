@@ -12,6 +12,3 @@ handlers:
   
 - url: /match
   script: match.py
-  
-- url: /convert
-  script: convert_legacy.py
