@@ -33,7 +33,7 @@ class LadbrokesParser(Parser):
 	def parse_row(self, a, row):
 		safea = a.string.encode('ascii', 'replace')
 		score = re.search("[0-9]\-[0-9]", safea)
-		source = a['href']
+		source = self.url
 		if score is not None:
 			current_score = score.group()
 			teams = safea.partition(' %s ' % current_score)
