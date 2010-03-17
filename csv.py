@@ -7,7 +7,17 @@ class MainHandler(webapp.RequestHandler):
 
 	def get(self):
 			w = self.response.out
-			matches = Matchup.all()
+			offset = self.request.get('offset')
+			limit = self.request.get('limit')
+			
+			if limit is "":
+			    limit = 100
+			if offset is "":
+			    offset = 0
+			
+			limit = int(limit)
+			offset = int(offset)
+			matches = Matchup.all()[offset:limit+offset]
 			for m in matches:
 				bets = Bet.all().filter("match = ", m)
 				for b in bets:
